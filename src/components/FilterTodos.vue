@@ -21,6 +21,7 @@ export default {
 </script>
 
 <style scoped>
+/*Better not to use Scoped styles. Scoped style will apply data-v-123 attr to every html element and overload the final bundle*/
 select {
   margin-top: 20px;
   padding: 6px;

@@ -4,15 +4,16 @@
       <span>Double click to mark as complete</span>
       <span>
           <span class="incomplete-box"></span> = Incomplete
-        </span>
+      </span>
       <span>
           <span class="complete-box"></span> = Complete
-        </span>
+      </span>
     </div>
     <div class="todos">
+<!--      You can get Index of the element as shown below-->
       <div 
-          @dblclick="onDblClick(todo)" 
-          v-for="todo in allTodos" 
+          @dblclick="onDblClick(todo, index)"
+          v-for="(todo, index) in allTodos"
           :key="todo.id" 
           class="todo"
           :class="{'is-complete':todo.completed}">
@@ -28,9 +29,10 @@ export default {
   name: "Todos",
   methods:{
     ...mapActions(['fetchTodos', 'deleteTodo', 'updateTodo']),
-    onDblClick(todo) {
+    onDblClick(todo, index) {
       const updTodo = {
         id: todo.id,
+        index: index,
         title: todo.title,
         completed: !todo.completed
       }

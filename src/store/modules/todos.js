@@ -8,36 +8,50 @@ const getters = {
 };
 const actions = {
     async fetchTodos({commit}) {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
-        commit('setTodos',response.data);
+        // Just to make it more real to live project - adding error handling. Better use try-catch as much as possible to avoid unclear behaviour
+        try {
+            const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
+            commit('SET_TODOS',response.data);
+        }
+        catch(err) {
+            console.log(err);
+            return err;
+        }
     },
 
     async addTodo({commit}, title) {
         const response = await axios.post('https://jsonplaceholder.typicode.com/todos', {title, completed:false});
-        commit('newTodo',response.data);
+        commit('NEW_TODO',response.data);
     },
     async deleteTodo({commit}, id) {
         await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`);
-        commit('removeTodo', id);
+        commit('REMOVE_TODO', id);
     },
     async filterTodos({commit}, e) {
         const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText)
         const response = await axios.get(`https://jsonplaceholder.typicode.com/todos/?_limit=${limit}`);
-        commit('setTodos',response.data);
+        commit('SET_TODOS',response.data);
     },
     async updateTodo({commit}, updTodo) {
-        const response =  await axios.put(`https://jsonplaceholder.typicode.com/todos/${updTodo.id}`, updTodo);
-        commit('updateTodo', response.data);
+        try {
+            const response =  await axios.put(`https://jsonplaceholder.typicode.com/todos/${updTodo.id}`, updTodo);
+            commit('UPDATE_TODO', response.data);
+        }
+        catch(err) {
+            alert(err)
+        }
     },
 };
 const mutations = {
-    setTodos:(state, todos) => (state.todos = todos),
-    newTodo:(state, todo) => (state.todos.unshift(todo)),
-    removeTodo:(state, id) => state.todos = state.todos.filter(todo=>todo.id !== id),
-    updateTodo:(state, updTodo) => {
-        const index = state.todos.findIndex(todo=>todo.id === updTodo.id);
-        if (index !== -1){
-            state.todos.splice(index, 1, updTodo)
+    // Mutations usually named with upper case. For easier differentiation with Actions
+    SET_TODOS:(state, todos) => (state.todos = todos),
+    NEW_TODO:(state, todo) => (state.todos.unshift(todo)),
+    REMOVE_TODO:(state, id) => state.todos = state.todos.filter(todo=>todo.id !== id),
+    UPDATE_TODO:(state, updTodo) => {
+        console.log(updTodo.index)
+        // looks better and cleaner huh?:)
+        if (updTodo.index !== -1){
+            state.todos.splice(updTodo.index, 1, updTodo)
         }
     }
 };
