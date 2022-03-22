@@ -1,9 +1,5 @@
-
 import todos from './modules/todos';
 import { createStore } from 'vuex'
-
-
-
 
 let store = createStore({
     modules: {
